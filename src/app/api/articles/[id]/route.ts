@@ -1,4 +1,3 @@
-import { articles } from "@/utils/data";
 import { UpdateArticleDto } from "@/utils/dtos";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/db";
@@ -41,7 +40,9 @@ export async function GET(request: NextRequest, { params }: Props) {
  */
 export async function PUT(request: NextRequest, { params }: Props) {
   try {
-    const article = articles.find((a) => a.id === parseInt(params.id));
+    const article = await prisma.article.findUnique({
+      where: { id: parseInt(params.id) },
+    });
     if (!article)
       return NextResponse.json(
         { message: "article not found" },
@@ -49,7 +50,13 @@ export async function PUT(request: NextRequest, { params }: Props) {
       );
 
     const body = (await request.json()) as UpdateArticleDto;
-    console.log(body);
+    await prisma.article.update({
+      where: { id: parseInt(params.id) },
+      data: {
+        title: body.title,
+        description: body.description,
+      },
+    });
 
     return NextResponse.json({ message: "article updated" }, { status: 200 });
   } catch (error) {
@@ -69,12 +76,16 @@ export async function PUT(request: NextRequest, { params }: Props) {
  */
 export async function DELETE(request: NextRequest, { params }: Props) {
   try {
-    const article = articles.find((a) => a.id === parseInt(params.id));
+    const article = await prisma.article.findUnique({
+      where: { id: parseInt(params.id) },
+    });
     if (!article)
       return NextResponse.json(
         { message: "article not found" },
         { status: 404 }
       );
+
+    await prisma.article.delete({ where: { id: parseInt(params.id) } });
 
     return NextResponse.json({ message: "article deleted" }, { status: 200 });
   } catch (error) {
