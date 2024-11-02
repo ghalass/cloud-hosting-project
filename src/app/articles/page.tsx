@@ -4,6 +4,7 @@ import React from "react";
 
 const ArticlesPage = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  if (!response.ok) throw new Error("Failled to fetch articles");
   const articles: Article[] = await response.json();
 
   return (
