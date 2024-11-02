@@ -12,6 +12,8 @@ export const metadata: Metadata = {
 };
 
 const ArticlesPage = async () => {
+  // delay 3s
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
   if (!response.ok) throw new Error("Failled to fetch articles");
   const articles: Article[] = await response.json();
