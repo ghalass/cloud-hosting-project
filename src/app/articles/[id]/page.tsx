@@ -1,4 +1,3 @@
-import ArticleItem from "@/components/articles/ArticleItem";
 import { Article } from "@/utils/types";
 import React from "react";
 
