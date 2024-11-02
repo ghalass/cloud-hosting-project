@@ -1,17 +1,16 @@
 import React from "react";
-import { Noto_Kufi_Arabic } from "next/font/google";
-
-const kufiArabic = Noto_Kufi_Arabic({
-  subsets: ["arabic"],
-  weight: ["300", "500"],
-});
+import RegisterForm from "./RegisterForm";
 
 const RegisterPage = () => {
   return (
-    <div className={kufiArabic.className}>
-      <h1>Register Page</h1>
-      <h1>أهلاً وسهلاً</h1>
-    </div>
+    <section className="fix-height container m-auto px-7 flex items-center justify-center">
+      <div className="m-auto bg-white rounded-lg p-5 w-full md:w-2/3 ">
+        <h1 className="text-3xl font-bold text-gray-800 mb-5">
+          Create New Account
+        </h1>
+        <RegisterForm />
+      </div>
+    </section>
   );
 };
 
