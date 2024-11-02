@@ -1,5 +1,5 @@
 import React from "react";
-import AddArticleForm from "./AdminArticleForm";
+import AddArticleForm from "./AddArticleForm";
 
 const AdminPage = () => {
   return (
