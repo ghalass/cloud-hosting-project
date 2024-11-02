@@ -12,3 +12,8 @@ export interface RegisterUserDto {
   email: string;
   password: string;
 }
+
+export interface LoginrUserDto {
+  email: string;
+  password: string;
+}
