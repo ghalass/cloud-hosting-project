@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-const pages = [1, 2, 3, 4, 5];
-
 interface PaginationProps {
   pages: number;
   pageNumber: number;
