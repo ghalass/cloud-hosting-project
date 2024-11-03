@@ -30,5 +30,4 @@ export interface CreateCommentDto {
 }
 export interface UpdateCommentDto {
   text?: string;
-  articleId?: number;
 }
