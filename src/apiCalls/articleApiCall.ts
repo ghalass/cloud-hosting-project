@@ -7,7 +7,10 @@ export async function getArticles(
   pageNumber: string | undefined
 ): Promise<Article> {
   const response = await fetch(
-    `${DOMAIN}/api/articles?pageNumber=${pageNumber}`
+    `${DOMAIN}/api/articles?pageNumber=${pageNumber}`,
+    {
+      cache: "no-store",
+    }
   );
   if (!response.ok) throw new Error("Failled to fetch articles");
   return response.json();
@@ -15,7 +18,9 @@ export async function getArticles(
 
 // get articles count
 export async function getArticlesCount(): Promise<number> {
-  const response = await fetch(`${DOMAIN}/api/articles/count`);
+  const response = await fetch(`${DOMAIN}/api/articles/count`, {
+    cache: "no-store",
+  });
   if (!response.ok) throw new Error("Failled to get articles count");
   const { count } = (await response.json()) as { count: number };
   return count;
@@ -26,7 +31,10 @@ export async function getArticlesBasedOnSearch(
   searchText: string | undefined
 ): Promise<Article> {
   const response = await fetch(
-    `${DOMAIN}/api/articles/search?searchText=${searchText}`
+    `${DOMAIN}/api/articles/search?searchText=${searchText}`,
+    {
+      cache: "no-store",
+    }
   );
   if (!response.ok) throw new Error("Failled to fetch articles");
   return response.json();
