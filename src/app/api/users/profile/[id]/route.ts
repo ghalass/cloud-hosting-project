@@ -1,6 +1,8 @@
 import prisma from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/utils/verifyToken";
+import { UpdateUserDto } from "@/utils/dtos";
+import bcrypt from "bcryptjs";
 
 interface Props {
   params: { id: string };
@@ -34,6 +36,101 @@ export async function DELETE(request: NextRequest, { params }: Props) {
       { message: "Only uer himself can delete his profile, forbidden" },
       { status: 403 } // forbidden
     );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+// GET
+/**
+ * @method GET
+ * @route ~/api/users/profil/:id
+ * @desc Get Profile By Id
+ * @access private (only user himself can get his account)
+ */
+export async function GET(request: NextRequest, { params }: Props) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(params.id) },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        isAdmin: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user)
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+
+    const userFromToken = verifyToken(request);
+    if (userFromToken === null || userFromToken.id !== user.id)
+      return NextResponse.json(
+        { message: "your are not allowed, access denid" },
+        { status: 403 }
+      );
+    return NextResponse.json(user, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT
+/**
+ * @method PUT
+ * @route ~/api/users/profil/:id
+ * @desc Update Profile By Id
+ * @access private (only user himself can update his account)
+ */
+export async function PUT(request: NextRequest, { params }: Props) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(params.id) },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        isAdmin: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user)
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+
+    const userFromToken = verifyToken(request);
+    if (userFromToken === null || userFromToken.id !== user.id)
+      return NextResponse.json(
+        { message: "your are not allowed, access denid" },
+        { status: 403 }
+      );
+
+    const body = (await request.json()) as UpdateUserDto;
+
+    if (body.password) {
+      const salt = await bcrypt.genSalt(10);
+      body.password = await bcrypt.hash(body.password, salt);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(params.id) },
+      data: {
+        username: body.username,
+        email: body.email,
+        password: body.password,
+      },
+    });
+    const { password, ...other } = updatedUser;
+    return NextResponse.json({ ...other }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
