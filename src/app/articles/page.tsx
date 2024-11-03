@@ -1,7 +1,9 @@
+import { getArticles, getArticlesCount } from "@/apiCalls/articleApiCall";
 import ArticleItem from "@/components/articles/ArticleItem";
 import Pagination from "@/components/articles/Pagination";
 import SearchArticleInput from "@/components/articles/SearchArticleInput";
-import { Article } from "@/utils/types";
+import { ARTICLE_PER_PAGE } from "@/utils/constants";
+import { Article } from "@prisma/client";
 import { Metadata } from "next";
 import React from "react";
 
@@ -11,12 +13,18 @@ export const metadata: Metadata = {
   authors: [{ name: "Ghalass" }],
 };
 
-const ArticlesPage = async () => {
+interface ArticlesPageProps {
+  searchParams: { pageNumber: string };
+}
+
+const ArticlesPage = async ({ searchParams }: ArticlesPageProps) => {
+  const { pageNumber } = searchParams;
   // delay 3s
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  if (!response.ok) throw new Error("Failled to fetch articles");
-  const articles: Article[] = await response.json();
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+  const articles: Article[] = await getArticles(pageNumber);
+  const count: number = await getArticlesCount();
+
+  const pages = Math.ceil(count / ARTICLE_PER_PAGE);
 
   return (
     <section className="container m-auto px-5 ">
@@ -26,7 +34,11 @@ const ArticlesPage = async () => {
           <ArticleItem key={item.id} article={item} />
         ))}
       </div>
-      <Pagination />
+      <Pagination
+        pageNumber={parseInt(pageNumber)}
+        route="/articles"
+        pages={pages}
+      />
     </section>
   );
 };

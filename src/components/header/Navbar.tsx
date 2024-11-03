@@ -33,7 +33,7 @@ const Navbar = () => {
         <ul className={styles.navLinks}>
           <Link
             onClick={() => setToggle(false)}
-            href={"/articles"}
+            href={"/articles?pageNumber=1"}
             className={styles.navLink}
           >
             Articles
