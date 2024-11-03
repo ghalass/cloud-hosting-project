@@ -5,7 +5,7 @@ import { Article } from "@prisma/client";
 // get articles bases on pageNumber
 export async function getArticles(
   pageNumber: string | undefined
-): Promise<Article> {
+): Promise<Article[]> {
   const response = await fetch(
     `${DOMAIN}/api/articles?pageNumber=${pageNumber}`,
     {
@@ -29,7 +29,7 @@ export async function getArticlesCount(): Promise<number> {
 // get articles bases on searchText
 export async function getArticlesBasedOnSearch(
   searchText: string | undefined
-): Promise<Article> {
+): Promise<Article[]> {
   const response = await fetch(
     `${DOMAIN}/api/articles/search?searchText=${searchText}`,
     {

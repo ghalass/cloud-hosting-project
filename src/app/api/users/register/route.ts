@@ -42,11 +42,11 @@ export async function POST(request: NextRequest) {
         email: body.email,
         password: hashedPassword,
       },
-      select: {
-        username: true,
-        email: true,
-        isAdmin: true,
-      },
+      // select: {
+      //   username: true,
+      //   email: true,
+      //   isAdmin: true,
+      // },
     });
 
     const cookie = setCookie({
