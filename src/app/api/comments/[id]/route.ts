@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     const user = verifyToken(request);
     if (user === null || user.id !== comment.userId)
       return NextResponse.json(
-        { message: "comment not found" },
+        { message: "you are not allowrd, access denied" },
         { status: 404 }
       );
 

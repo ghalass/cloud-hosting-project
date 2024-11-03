@@ -23,7 +23,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className={inter.className}>
         <Header />
-        <ToastContainer theme="light" position="top-center" />
+        <ToastContainer theme="colored" position="top-center" />
         <main>{children}</main>
         <Footer />
       </body>
