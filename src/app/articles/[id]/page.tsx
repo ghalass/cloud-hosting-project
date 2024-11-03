@@ -13,7 +13,10 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
   const token = cookies().get("jwtToken")?.value || "";
   const payload = verifyTokenForPage(token);
 
-  const article: SingleArticle = await getSingleArticle(params.id);
+  // delay 3s
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  const article: SingleArticle = await getSingleArticle(params.id.toString());
   return (
     <section className="fix-height container m-auto px-5 pt-8 md:w-3/4">
       <div className="bg-white p-7 rounded-lg mb-7">

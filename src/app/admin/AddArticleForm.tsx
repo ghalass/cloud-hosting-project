@@ -1,18 +1,30 @@
 "use client";
 
+import { DOMAIN } from "@/utils/constants";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 const AddArticleForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const router = useRouter();
 
-  const formSubmitHandler = (e: React.FormEvent) => {
+  const formSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     if (title === "") return toast.error("Title is required");
     if (description === "") return toast.error("Description is required");
 
-    console.log({ title, description });
+    try {
+      await axios.post(`${DOMAIN}/api/articles`, { title, description });
+      setTitle("");
+      setDescription("");
+      toast.success("New article added");
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error?.response?.data.message);
+    }
   };
   return (
     <div>
