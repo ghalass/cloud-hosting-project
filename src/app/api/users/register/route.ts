@@ -4,6 +4,8 @@ import { registerSchema } from "@/utils/validationSchema";
 import { User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { generateJWT } from "@/utils/generateToken";
+import { JWTPayload } from "@/utils/types";
 
 /**
  * @method POST
@@ -48,8 +50,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    //@Todo --> generate JWT Token
-    const token = null;
+    // --> generate JWT Token
+    const jwtPayload: JWTPayload = {
+      id: newUser.id,
+      isAdmin: newUser.isAdmin,
+      username: newUser.username,
+    };
+    const token = generateJWT(jwtPayload);
 
     return NextResponse.json({ ...newUser, token }, { status: 201 });
   } catch (error) {
