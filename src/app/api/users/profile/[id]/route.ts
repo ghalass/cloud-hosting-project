@@ -1,7 +1,6 @@
 import prisma from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import { JWTPayload } from "@/utils/types";
+import { verifyToken } from "@/utils/verifyToken";
 
 interface Props {
   params: { id: string };
@@ -22,20 +21,8 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     if (!user)
       return NextResponse.json({ message: "user not found" }, { status: 404 });
 
-    const authToken = request.headers.get("authToken") as string;
-
-    // if (!authToken)
-    //   return NextResponse.json(
-    //     { message: "Not token provided, access denied" },
-    //     { status: 401 } // Unauthorized
-    //   );
-
-    const userFromToken = jwt.verify(
-      authToken,
-      process.env.JWT_SECRET as string
-    ) as JWTPayload;
-
-    if (userFromToken.id === user.id) {
+    const userFromToken = verifyToken(request);
+    if (userFromToken !== null && userFromToken.id === user.id) {
       await prisma.user.delete({ where: { id: parseInt(params.id) } });
       return NextResponse.json(
         { message: "Your profile (account) has been deleted" },

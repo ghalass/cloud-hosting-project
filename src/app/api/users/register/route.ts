@@ -4,8 +4,7 @@ import { registerSchema } from "@/utils/validationSchema";
 import { User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { generateJWT } from "@/utils/generateToken";
-import { JWTPayload } from "@/utils/types";
+import { setCookie } from "@/utils/generateToken";
 
 /**
  * @method POST
@@ -50,15 +49,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // --> generate JWT Token
-    const jwtPayload: JWTPayload = {
+    const cookie = setCookie({
       id: newUser.id,
       isAdmin: newUser.isAdmin,
       username: newUser.username,
-    };
-    const token = generateJWT(jwtPayload);
+    });
 
-    return NextResponse.json({ ...newUser, token }, { status: 201 });
+    return NextResponse.json(
+      {
+        ...newUser,
+        message: "Registred & Authenticated",
+        headers: { "Set-Cookie": cookie },
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
