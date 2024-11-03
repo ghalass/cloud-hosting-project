@@ -24,11 +24,11 @@ export async function DELETE(request: NextRequest, { params }: Props) {
 
     const authToken = request.headers.get("authToken") as string;
 
-    if (!authToken)
-      return NextResponse.json(
-        { message: "Not token provided, access denied" },
-        { status: 401 } // Unauthorized
-      );
+    // if (!authToken)
+    //   return NextResponse.json(
+    //     { message: "Not token provided, access denied" },
+    //     { status: 401 } // Unauthorized
+    //   );
 
     const userFromToken = jwt.verify(
       authToken,
