@@ -36,7 +36,7 @@ model Comment {
   userId    Int?
 
   // one-to-many relation between article & comment
-  article Article @relation(fields: [articleId], references: [id])
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
   // one-to-many relation between user & comment
-  user    User?   @relation(fields: [userId], references: [id])
+  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
