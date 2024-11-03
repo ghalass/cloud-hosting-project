@@ -38,5 +38,5 @@ model Comment {
   // one-to-many relation between article & comment
   article Article @relation(fields: [articleId], references: [id])
   // one-to-many relation between user & comment
-  User    User?   @relation(fields: [userId], references: [id])
+  user    User?   @relation(fields: [userId], references: [id])
 }
