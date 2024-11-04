@@ -1,4 +1,5 @@
 import StatusBadge from "@/components/StatusBadge";
+import { deleteTask } from "@/utils/actions";
 import prisma from "@/utils/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,6 +14,9 @@ const TaskDetailsPage = async ({ params }: TaskDetailsPageProps) => {
   });
 
   if (!task) notFound();
+
+  const deleteTaskHandler = deleteTask.bind(null, task.id);
+
   return (
     <section className="fix-height p-5">
       <div className="flex items-center justify-between">
@@ -26,7 +30,8 @@ const TaskDetailsPage = async ({ params }: TaskDetailsPageProps) => {
           >
             Edit
           </Link>
-          <form action="">
+          <form action={deleteTaskHandler}>
+            {/* <input type="hidden" name="id" value={task.id} /> */}
             <button
               type="submit"
               className="bg-red-700 hover:bg-red-600 transition-colors rounded-lg py-1 px-2 text-xl"
