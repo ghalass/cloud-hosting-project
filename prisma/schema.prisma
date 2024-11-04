@@ -40,3 +40,18 @@ model Comment {
   // one-to-many relation between user & comment
   user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+enum Status {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(200)
+  description String
+  stauts      Status   @default(TODO)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
