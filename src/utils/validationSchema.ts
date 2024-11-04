@@ -32,3 +32,19 @@ export const updateUserSchema = z.object({
   email: z.string().min(3).max(200).email().optional(),
   password: z.string().min(6).optional(),
 });
+
+export const createTaskSchema = z.object({
+  title: z
+    .string({
+      required_error: "Title is required",
+      invalid_type_error: "Title should be type string",
+    })
+    .min(2, { message: "Title should be at least 2 caraters long" })
+    .max(200, { message: "Title should be less than 200 caraters long" }),
+  description: z
+    .string({
+      required_error: "Description is required",
+      invalid_type_error: "Description should be type string",
+    })
+    .min(4, { message: "Description should be at least 4 caraters long" }),
+});
