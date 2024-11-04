@@ -1,4 +1,5 @@
 import prisma from "@/utils/db";
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -16,6 +17,7 @@ async function createTask(formData: FormData) {
       description,
     },
   });
+  revalidatePath("/todo");
   redirect("/todo");
 }
 
