@@ -1,9 +1,11 @@
-import { getSingleArticle } from "@/apiCalls/articleApiCall";
+// import { getSingleArticle } from "@/apiCalls/articleApiCall";
 import AddCommentForm from "@/components/comments/AddCommentForm";
 import CommentItem from "@/components/comments/CommentItem";
+import prisma from "@/utils/db";
 import { SingleArticle } from "@/utils/types";
 import { verifyTokenForPage } from "@/utils/verifyToken";
 import { cookies } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 
 interface SingleArticlePageProps {
   params: { id: number };
@@ -16,7 +18,29 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
   // delay 3s
   // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  const article: SingleArticle = await getSingleArticle(params.id.toString());
+  // const article: SingleArticle = await getSingleArticle(params.id.toString());
+
+  const article = (await prisma.article.findUnique({
+    where: { id: parseInt(params.id.toString()) },
+    include: {
+      comments: {
+        include: {
+          user: {
+            select: { username: true },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  })) as SingleArticle;
+
+  if (!article) {
+    // notFound();
+    redirect("/not-found");
+  }
+
   return (
     <section className="fix-height container m-auto px-5 pt-8 md:w-3/4">
       <div className="bg-white p-7 rounded-lg mb-7">
